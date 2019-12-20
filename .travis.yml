@@ -1,0 +1,12 @@
+language:
+  - java
+jdk:
+  - openjdk8
+script:
+- ./gradlew test
+- docker build -t event-logger .
+- docker run -d -p 8080:8080 --name event-logger_container event-logger && sleep 10
+- curl http://127.0.0.1:8080/v1/info
+- docker stop event-logger_container
+- docker rm event-logger_container
+- docker rmi event-logger
